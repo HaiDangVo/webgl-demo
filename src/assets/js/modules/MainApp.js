@@ -16,6 +16,7 @@ import ACamera from "../components/ACamera"
 import {
   DeThrottler
 } from "../libs/Helper"
+import AMesh from "../components/AMesh"
 export default class MainApp extends BaseModule {
   register() {
     this.scene = new Scene()
@@ -35,6 +36,7 @@ export default class MainApp extends BaseModule {
       position: new Vector2()
     }
     this.rayCaster = new Raycaster()
+    this.activeMeshes = []
     this.el.appendChild(this.renderer.domElement)
     // debug
     // const grid = new GridHelper(50, 50)
@@ -45,10 +47,28 @@ export default class MainApp extends BaseModule {
     // light
     this.scene.add(new AmbientLight(0x999999))
 
+    // loader
     this.loader = new ObjectLoader()
-
     this.loader.load('assets/images/scene.json', object => {
       this.scene.add(object)
+      const aMesh01 = new AMesh({
+        mesh: this.scene.getObjectByName('rotateObject 01'),
+        animations: [{
+          name: 'float',
+          param: 1
+        }, {
+          name: 'rotate',
+          param: 1
+        }]
+      })
+      const aMesh02 = new AMesh({
+        mesh: this.scene.getObjectByName('rotateObject 02'),
+        animations: [{
+          name: 'rotate',
+          param: -0.75
+        }]
+      })
+      this.activeMeshes = [aMesh01, aMesh02]
     })
     // wall
     // - left
@@ -110,6 +130,8 @@ export default class MainApp extends BaseModule {
     // console.log(delta)
     this.controls && this.controls.update()
     this.aCam.update(delta)
+    this.activeMeshes.forEach(a => a.update(delta))
+    //
     if (this.pointer.needCast) {
       this.pointer.needCast = false
       this.rayCaster.setFromCamera(this.pointer.position, this.aCam.camera)

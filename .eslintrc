@@ -18,7 +18,7 @@
     "use-isnan": "error",
     "no-unused-vars": "off",
     "no-use-before-define": "error",
-    "array-bracket-newline": "error",
+    "array-bracket-newline": "off",
     "block-spacing": "error",
     "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "camelcase": ["error", { "ignoreImports": true }],

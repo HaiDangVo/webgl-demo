@@ -812,6 +812,7 @@
 				"uuid": "4C7937FD-6937-4E18-937E-0FBE1DCED854",
 				"type": "Mesh",
 				"name": "leftStandPoint",
+				"visible": false,
 				"layers": 1,
 				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,16,0,12,1],
 				"geometry": "2E0278A6-FF9E-42A0-8D13-7F813DE35DBE",
@@ -821,6 +822,7 @@
 				"uuid": "1E1264F0-D456-47D6-929D-D6EF21982C29",
 				"type": "Mesh",
 				"name": "rightStandPoint",
+				"visible": false,
 				"layers": 1,
 				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-20,0,12,1],
 				"geometry": "479F9AED-E3A9-4E26-9390-2382DE5AADCB",
@@ -1021,6 +1023,32 @@
 						"layers": 1,
 						"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,-0.15,1],
 						"geometry": "B8470C08-BCFA-4232-A8DD-C38E066083BF",
+						"material": "3E54069C-9580-4369-A6E4-53A6900A0D87"
+					}]
+			},
+			{
+				"uuid": "375682BC-7F37-48D2-8C72-940829576C4E",
+				"type": "Group",
+				"name": "Group",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,6,44.8,1],
+				"children": [
+					{
+						"uuid": "E7880790-D538-4DB8-8D82-E02E96CC4FDD",
+						"type": "Mesh",
+						"name": "Box",
+						"layers": 1,
+						"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+						"geometry": "259B9EC7-E2B9-498B-841F-F1AE208D82B5",
+						"material": "E1EB826A-AE30-42AC-9DCD-4968C5A78126"
+					},
+					{
+						"uuid": "C76225D4-0C0F-4617-BD29-BC7D5A212BC7",
+						"type": "Mesh",
+						"name": "pic 03",
+						"layers": 1,
+						"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,-0.15,1],
+						"geometry": "7ACBA4FB-15DA-4261-9416-70D06D2C6786",
 						"material": "3E54069C-9580-4369-A6E4-53A6900A0D87"
 					}]
 			}]

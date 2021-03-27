@@ -16,6 +16,8 @@ export default class ACamera {
   constructor(options) {
     this.options = options
     this.speed = options.speed || 4
+    this.maxZ = options.maxZ || 30
+    this.minZ = options.minZ || -30
     this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.selfPosition = {
       x: 0,
@@ -57,8 +59,10 @@ export default class ACamera {
     if (this.isInsideRoom) return
     switch (dir) {
       case 'forward':
-        this.selfPosition.z += this.speed
-        this.targetPosition.z += this.speed
+        if (this.selfPosition.z < this.maxZ) {
+          this.selfPosition.z += this.speed
+          this.targetPosition.z += this.speed
+        }
         break;
       case 'right':
         this.selfPosition.x += this.speed
@@ -69,8 +73,10 @@ export default class ACamera {
         this.targetPosition.x -= this.speed
         break;
       case 'backward':
-        this.selfPosition.z -= this.speed
-        this.targetPosition.z -= this.speed
+        if (this.selfPosition.z > this.minZ) {
+          this.selfPosition.z -= this.speed
+          this.targetPosition.z -= this.speed
+        }
         break;
       default:
         break;
