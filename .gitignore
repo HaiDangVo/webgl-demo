@@ -1,0 +1,11 @@
+**/**/node_modules
+**/**/dist
+**/**/docs
+**/**/.tmp
+**/**/bower_components
+**/**/test/bower_components
+**/**/app/assets/css/base/_all-sprites.scss
+**/**/*.zip
+**/*.zip
+**/**/yarn-error.log
+**/**/.DS_Store

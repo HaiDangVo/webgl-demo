@@ -1,0 +1,30 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  }, 
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": ["error", 2],
+    "use-isnan": "error",
+    "no-unused-vars": "error",
+    "no-use-before-define": "error",
+    "array-bracket-newline": "error",
+    "block-spacing": "error",
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "camelcase": ["error", { "ignoreImports": true }],
+    "eqeqeq": ["error", "smart"],
+    "no-constant-condition": "error",
+    "prefer-const": "error",
+    "no-console": 1
+  }
+}

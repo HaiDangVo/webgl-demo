@@ -1,0 +1,75 @@
+$grid-col: 12;
+$gutter: 15px;
+$cw: 1440px; // container width
+
+.container {
+  width: 100%;
+  padding-left: $gutter;
+  padding-right: $gutter;
+  max-width: $cw;
+  margin: auto;
+}
+
+.row {
+  margin-left: -#{$gutter};
+  margin-right: -#{$gutter};
+  display: flex;
+  flex-wrap: wrap;
+}
+
+[class*='col-'] {
+  flex: 0 0 auto;
+  width: 100%;
+  padding-left: $gutter;
+  padding-right: $gutter;
+}
+
+@for $i from 1 through $grid-col {
+  .col-#{$i} {
+    width: 100% / $grid-col * $i;
+  }
+
+  .col-push-#{$i} {
+    margin-left: 100% / $grid-col * $i;
+  }
+
+  @include screen(xs) {
+    .xs\:col-#{$i} {
+      width: 100% / $grid-col * $i;
+    }
+
+    .xs\:col-push-#{$i} {
+      margin-left: 100% / $grid-col * $i;
+    }
+  }
+
+  @include screen(sm) {
+    .sm\:col-#{$i} {
+      width: 100% / $grid-col * $i;
+    }
+
+    .sm\:col-push-#{$i} {
+      margin-left: 100% / $grid-col * $i;
+    }
+  }
+
+  @include screen(md) {
+    .md\:col-#{$i} {
+      width: 100% / $grid-col * $i;
+    }
+
+    .md\:col-push-#{$i} {
+      margin-left: 100% / $grid-col * $i;
+    }
+  }
+
+  @include screen(lg) {
+    .lg\:col-#{$i} {
+      width: 100% / $grid-col * $i;
+    }
+
+    .lg\:col-push-#{$i} {
+      margin-left: 100% / $grid-col * $i;
+    }
+  }
+}
