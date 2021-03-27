@@ -814,7 +814,7 @@
 				"name": "leftStandPoint",
 				"visible": false,
 				"layers": 1,
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,16,0,12,1],
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,16,0,16,1],
 				"geometry": "2E0278A6-FF9E-42A0-8D13-7F813DE35DBE",
 				"material": "D802B053-0745-4D69-A1B2-A80A639E5151"
 			},
@@ -824,7 +824,7 @@
 				"name": "rightStandPoint",
 				"visible": false,
 				"layers": 1,
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-20,0,12,1],
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-16,0,12,1],
 				"geometry": "479F9AED-E3A9-4E26-9390-2382DE5AADCB",
 				"material": "FCD9F2B7-B3E8-4026-84E2-05B3B3EF804C"
 			},
@@ -914,7 +914,7 @@
 				"name": "outDoor",
 				"visible": false,
 				"layers": 1,
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,12,1],
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,11,1],
 				"geometry": "49B14815-78E6-4C01-A15F-4CC5E856B7B0",
 				"material": "4670AC56-90F8-4BAE-8EF7-0D071B654770"
 			},
@@ -951,7 +951,7 @@
 				"type": "Group",
 				"name": "Group",
 				"layers": 1,
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-26,0,18,1],
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,-26,0,14,1],
 				"children": [
 					{
 						"uuid": "44EF4433-B9D6-4154-8608-EC640284D231",
@@ -1005,7 +1005,7 @@
 				"type": "Group",
 				"name": "Group",
 				"layers": 1,
-				"matrix": [0,0,-1,0,0,1,0,0,1,0,0,0,29.8,6,24,1],
+				"matrix": [0,0,-1,0,0,1,0,0,1,0,0,0,29.8,6,18,1],
 				"children": [
 					{
 						"uuid": "8DCE37A2-63B3-4A2B-9C93-56473677BCF7",

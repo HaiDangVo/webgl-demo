@@ -15,6 +15,7 @@ import {
 export default class ACamera {
   constructor(options) {
     this.options = options
+    this.scene = options.scene
     this.speed = options.speed || 4
     this.maxZ = options.maxZ || 30
     this.minZ = options.minZ || -30
@@ -30,6 +31,7 @@ export default class ACamera {
       z: 0.6
     }
     this.isInsideRoom = false
+    this.moveQueue = []
     this.camera.position.set(this.selfPosition.x, this.selfPosition.y, this.selfPosition.z)
     this.controls = isMobile() ? new DeviceOrientationControls(this.camera) : new OrbitControls(this.camera, this.options.el)
     // this.controls = new OrbitControls(this.camera, this.options.el)
@@ -55,7 +57,6 @@ export default class ACamera {
   }
 
   move(dir) {
-    console.log(this.isInsideRoom)
     if (this.isInsideRoom) return
     switch (dir) {
       case 'forward':
@@ -85,17 +86,39 @@ export default class ACamera {
 
   moveTo(object, scene) {
     const map = {
-      doorLeft: 'leftStandPoint',
-      doorRight: 'rightStandPoint',
-      outDoor: 'outDoor'
+      doorLeft: ['outDoor', 'leftStandPoint'],
+      doorRight: ['outDoor', 'rightStandPoint'],
+      outDoor: ['outDoor']
     }
-    const target = scene.getObjectByName(map[object.object.name])
+    this.moveQueue = map[object.object.name]
+    const target = scene.getObjectByName(this.moveQueue.shift())
+    this.lockTarget(target)
+  }
+
+  lockTarget(target) {
     if (target) {
       this.selfPosition.x = target.position.x
       this.targetPosition.x = target.position.x
       //
       this.selfPosition.z = target.position.z
-      this.targetPosition.z = target.position.z + 0.6
+      this.targetPosition.z = target.position.z
+      //
+      if (target.name === 'outDoor') {
+        if (this.moveQueue.length) {
+          this.targetPosition.x +=
+            this.moveQueue[0] === 'leftStandPoint' ? 0.8 :
+            this.moveQueue[0] === 'rightStandPoint' ? -0.8 : 0
+          this.targetPosition.z -= 0.4
+        } else {
+          this.targetPosition.z += 0.6
+        }
+      }
+      if (target.name === 'leftStandPoint') {
+        this.targetPosition.x += 0.6
+      }
+      if (target.name === 'rightStandPoint') {
+        this.targetPosition.x -= 0.6
+      }
     }
   }
 
@@ -105,6 +128,12 @@ export default class ACamera {
     const t = 1 - Math.pow(0.2, delta)
     if (!this.isTouched) {
       this.camera.position.lerp(camPosition, t)
+    }
+    if (this.camera.position.distanceTo(camPosition) < 1) {
+      if (this.moveQueue.length) {
+        const target = this.scene.getObjectByName(this.moveQueue.shift())
+        this.lockTarget(target)
+      }
     }
     this.controls.target.lerp(targetPosition, t)
     this.controls && this.controls.update()

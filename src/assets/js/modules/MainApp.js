@@ -21,7 +21,8 @@ export default class MainApp extends BaseModule {
   register() {
     this.scene = new Scene()
     this.aCam = new ACamera({
-      el: this.el
+      el: this.el,
+      scene: this.scene
     })
     this.renderer = new WebGLRenderer({
       antialias: true
