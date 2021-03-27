@@ -15,20 +15,22 @@ import {
 export default class ACamera {
   constructor(options) {
     this.options = options
-    this.speed = options.speed || 1
-    this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    this.speed = options.speed || 4
+    this.camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.selfPosition = {
       x: 0,
-      y: 1.6,
+      y: 4,
       z: 0
     }
     this.targetPosition = {
       x: 0,
-      y: 1.6,
+      y: 4,
       z: 0.6
     }
+    this.isInsideRoom = false
     this.camera.position.set(this.selfPosition.x, this.selfPosition.y, this.selfPosition.z)
     this.controls = isMobile() ? new DeviceOrientationControls(this.camera) : new OrbitControls(this.camera, this.options.el)
+    // this.controls = new OrbitControls(this.camera, this.options.el)
     this.controls.enableDamping = true
     this.controls.dampingFactor = 0.06
     this.controls.enablePan = false
@@ -51,6 +53,8 @@ export default class ACamera {
   }
 
   move(dir) {
+    console.log(this.isInsideRoom)
+    if (this.isInsideRoom) return
     switch (dir) {
       case 'forward':
         this.selfPosition.z += this.speed
@@ -70,6 +74,22 @@ export default class ACamera {
         break;
       default:
         break;
+    }
+  }
+
+  moveTo(object, scene) {
+    const map = {
+      doorLeft: 'leftStandPoint',
+      doorRight: 'rightStandPoint',
+      outDoor: 'outDoor'
+    }
+    const target = scene.getObjectByName(map[object.object.name])
+    if (target) {
+      this.selfPosition.x = target.position.x
+      this.targetPosition.x = target.position.x
+      //
+      this.selfPosition.z = target.position.z
+      this.targetPosition.z = target.position.z + 0.6
     }
   }
 
