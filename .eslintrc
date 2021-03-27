@@ -6,7 +6,7 @@
       "jsx": true,
       "experimentalObjectRestSpread": true
     }
-  }, 
+  },
   "env": {
     "browser": true,
     "es6": true,
@@ -14,9 +14,9 @@
   },
   "extends": "eslint:recommended",
   "rules": {
-    "indent": ["error", 2],
+    "indent": ["off", 2],
     "use-isnan": "error",
-    "no-unused-vars": "error",
+    "no-unused-vars": "off",
     "no-use-before-define": "error",
     "array-bracket-newline": "error",
     "block-spacing": "error",

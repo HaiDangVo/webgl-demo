@@ -184,6 +184,7 @@ gulp.task('browser-sync', () => {
       directory: true,
       reloadOnRestart: false
     },
+    https: true
   })
 })
 
