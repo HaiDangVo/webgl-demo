@@ -8012,7 +8012,7 @@
 				"type": "Mesh",
 				"name": "buttonMoveForward",
 				"layers": 1,
-				"matrix": [0,0,1,0,-1,0,0,0,0,-1,0,0,0,2,12,1],
+				"matrix": [0,0,1,0,-1,0,0,0,0,-1,0,0,0,0.6,12,1],
 				"geometry": "6B3B8F75-3471-4ABF-94A3-B620CD3CEEF8",
 				"material": "652E96E7-C00B-4D65-9437-C268197D2F81"
 			},
@@ -8021,7 +8021,7 @@
 				"type": "Mesh",
 				"name": "buttonMoveBackward",
 				"layers": 1,
-				"matrix": [0,0,-1,0,-1,0,0,0,0,1,0,0,0,2,-12,1],
+				"matrix": [0,0,-1,0,-1,0,0,0,0,1,0,0,0,0.6,-12,1],
 				"geometry": "6B3B8F75-3471-4ABF-94A3-B620CD3CEEF8",
 				"material": "652E96E7-C00B-4D65-9437-C268197D2F81"
 			}]

@@ -4,48 +4,47 @@ import {
   AxesHelper,
   Clock,
   GridHelper,
-  Loader,
   ObjectLoader,
-  PCFSoftShadowMap,
-  Raycaster,
   Scene,
   Vector2,
   WebGLRenderer
 } from "three"
-import ACamera from "../components/ACamera"
+import TheViewer from "../components/TheViewer"
 import {
   DeThrottler
 } from "../libs/Helper"
 import AMesh from "../components/AMesh"
 import PictureShader from "../components/PictureShader"
+import InteractDetector from "../components/InteractDetector"
+import factory from '../libs/Factory'
 export default class MainApp extends BaseModule {
   register() {
     this.scene = new Scene()
-    this.aCam = new ACamera({
+    this.theViewer = new TheViewer({
       el: this.el,
       scene: this.scene
     })
     this.renderer = new WebGLRenderer({
       antialias: true
     })
-    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.enabled = true
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.ticker = new Clock(false)
-    this.pointer = {
-      isTouch: false,
-      needCast: false,
-      position: new Vector2()
-    }
-    this.rayCaster = new Raycaster()
     this.activeMeshes = []
     this.pictures = []
+    this.interactDetector = new InteractDetector({
+      scene: this.scene,
+      renderer: this.renderer,
+      theViewer: this.theViewer
+    })
     this.el.appendChild(this.renderer.domElement)
     // debug
     // const grid = new GridHelper(50, 50)
     // this.scene.add(grid)
     // const axis = new AxesHelper(10)
     // this.scene.add(axis)
+    window.app = this
 
     // light
     this.scene.add(new AmbientLight(0x999999))
@@ -73,8 +72,8 @@ export default class MainApp extends BaseModule {
       })
       this.activeMeshes = [aMesh01, aMesh02]
       //
-      this.aCam.navigation.hideVisibleCheckpoints()
-      this.aCam.initFollowers()
+      this.theViewer.navigation.hideVisibleCheckpoints()
+      this.theViewer.initFollowers()
       // custom shader object
       const names = [
         'p_i_c01', 'picRL1-1', 'picRL1-2', 'picRL1-3',
@@ -105,57 +104,72 @@ export default class MainApp extends BaseModule {
             },
           }
         })
+        cObject.active = name === 'p_i_c01'
         this.pictures.push(cObject)
       })
-    })
-    // wall
-    // - left
 
-    // - right
-    //
-    this.ticker.start()
-    this.loop()
-    //
-    window.app = this
+      // all done
+      const preloader = (factory.getModulesByName('PreloaderModule') || [])[0]
+      preloader && preloader.hide()
+      this.theViewer.preStart()
+      this.start()
+    })
+    // reigster handler
+    this.interactDetector.addEventListener('onTouchStart', intersects => {
+      if (!intersects.length) return
+      const button = intersects.find(i => i.object.name.includes('button'))
+      if (button) {
+        if (button.object.name === 'buttonMoveForward') {
+          this.theViewer.move('forward')
+          this.theViewer.move('forward')
+        }
+        if (button.object.name === 'buttonMoveBackward') {
+          this.theViewer.move('backward')
+          this.theViewer.move('backward')
+        }
+      }
+    })
+    this.interactDetector.addEventListener('onTouchEnd', intersects => {
+      if (!intersects.length) return
+      const door = intersects.find(i => i.object.name.includes('door'))
+      const pic = intersects.find(i => i.object.name.includes('pic'))
+      if (door) {
+        this.theViewer.moveTo(door, this.scene)
+        return
+      }
+      if (pic) {
+        this.theViewer.moveTo(pic, this.scene)
+        return
+      }
+    })
     DeThrottler({
       event: 'wheel',
       skipLastCall: true,
       callback: e => {
         if (e.deltaY < -2) {
-          this.aCam.move('forward')
+          this.theViewer.move('forward')
         }
         if (e.deltaY > 2) {
-          this.aCam.move('backward')
+          this.theViewer.move('backward')
         }
       }
     })
     DeThrottler({
       event: 'resize',
       callback: () => {
-        this.aCam.camera.aspect = window.innerWidth / window.innerHeight
-        this.aCam.camera.updateProjectionMatrix()
+        this.theViewer.camera.aspect = window.innerWidth / window.innerHeight
+        this.theViewer.camera.updateProjectionMatrix()
         this.renderer.setSize(window.innerWidth, window.innerHeight)
       }
     })
-    this.renderer.domElement.addEventListener('pointerdown', e => {
-      this.pointer.position.x = (e.clientX / window.innerWidth) * 2 - 1
-      this.pointer.position.y = -(e.clientY / window.innerHeight) * 2 + 1
-      this.pointer.isTouch = true
-    })
-    this.renderer.domElement.addEventListener('pointerup', e => {
-      const prevPos = {
-        x: this.pointer.position.x,
-        y: this.pointer.position.y
-      }
-      this.pointer.position.x = (e.clientX / window.innerWidth) * 2 - 1
-      this.pointer.position.y = -(e.clientY / window.innerHeight) * 2 + 1
-      if (this.pointer.isTouch) {
-        this.pointer.isTouch = false
-        if (Math.abs(prevPos.x - this.pointer.position.x) < 0.05 && Math.abs(prevPos.y - this.pointer.position.y) < 0.05) {
-          this.pointer.needCast = true
-        }
-      }
-    })
+
+    //
+    // this.start()
+  }
+
+  start() {
+    this.ticker.start()
+    this.loop()
   }
 
   loop() {
@@ -167,42 +181,12 @@ export default class MainApp extends BaseModule {
   update(delta) {
     // console.log(delta)
     this.controls && this.controls.update()
-    this.aCam.update(delta)
+    this.theViewer.update(delta)
     this.activeMeshes.forEach(a => a.update(delta))
     this.pictures.forEach(p => p.update(delta))
-    //
-    if (this.pointer.needCast) {
-      this.pointer.needCast = false
-      this.rayCaster.setFromCamera(this.pointer.position, this.aCam.camera)
-      const intersects = this.rayCaster.intersectObjects(this.scene.children, true)
-      if (intersects.length) {
-        // console.log(intersects)
-        const door = intersects.find(i => i.object.name.includes('door'))
-        const pic = intersects.find(i => i.object.name.includes('pic'))
-        const button = intersects.find(i => i.object.name.includes('button'))
-        if (door) {
-          this.aCam.moveTo(door, this.scene)
-          return
-        }
-        if (pic) {
-          this.aCam.moveTo(pic, this.scene)
-          return
-        }
-        if (button) {
-          if (button.object.name === 'buttonMoveForward') {
-            this.aCam.move('forward')
-            this.aCam.move('forward')
-          }
-          if (button.object.name === 'buttonMoveBackward') {
-            this.aCam.move('backward')
-            this.aCam.move('backward')
-          }
-        }
-      }
-    }
   }
 
   render() {
-    this.renderer.render(this.scene, this.aCam.camera)
+    this.renderer.render(this.scene, this.theViewer.camera)
   }
 }

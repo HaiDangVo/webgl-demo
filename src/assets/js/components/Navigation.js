@@ -65,6 +65,10 @@ export default class Navigation {
     })
   }
 
+  checkIfOutdoor() {
+    return !this.currentCheckpoint || this.currentCheckpoint === pathInstruction.checkpointOS
+  }
+
   saveCheckpoint(name) {
     this.currentCheckpoint = pathInstruction[name]
     this.isOutdoor = this.currentCheckpoint === pathInstruction.checkpointOS

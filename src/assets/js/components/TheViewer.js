@@ -5,15 +5,9 @@ import {
 import {
   OrbitControls
 } from "three/examples/jsm/controls/OrbitControls"
-import {
-  DeviceOrientationControls
-} from "three/examples/jsm/controls/DeviceOrientationControls"
-import {
-  isMobile
-} from "../libs/Helper"
 import Navigation from "./Navigation"
 
-export default class ACamera {
+export default class TheViewer {
   constructor(options) {
     this.options = options
     this.scene = options.scene
@@ -37,7 +31,6 @@ export default class ACamera {
     })
     this.followers = []
     this.camera.position.set(this.selfPosition.x, this.selfPosition.y, this.selfPosition.z)
-    // this.controls = isMobile() ? new DeviceOrientationControls(this.camera) : new OrbitControls(this.camera, this.options.el)
     this.controls = new OrbitControls(this.camera, this.options.el)
     this.controls.enableDamping = true
     this.controls.dampingFactor = 0.06
@@ -60,6 +53,12 @@ export default class ACamera {
     this.isTouched = false
   }
 
+  preStart() {
+    this.camera.position.set(0, 10, -12)
+    this.camera.lookAt(new Vector3(0, 0, -6))
+    this.controls && this.controls.update()
+  }
+
   initFollowers() {
     const forward = this.scene.getObjectByName('buttonMoveForward')
     const backward = this.scene.getObjectByName('buttonMoveBackward')
@@ -77,14 +76,6 @@ export default class ACamera {
           this.targetPosition.z += this.speed
         }
         break;
-      case 'right':
-        this.selfPosition.x += this.speed
-        this.targetPosition.x += this.speed
-        break;
-      case 'left':
-        this.selfPosition.x -= this.speed
-        this.targetPosition.x -= this.speed
-        break;
       case 'backward':
         if (this.selfPosition.z > this.minZ) {
           this.selfPosition.z -= this.speed
@@ -97,7 +88,7 @@ export default class ACamera {
   }
 
   moveTo(object, scene) {
-    if (!this.navigation.currentCheckpoint) {
+    if (this.navigation.checkIfOutdoor()) {
       this.navigation.saveCheckpoint('checkpointOS')
       this.moveQueue = ['checkpointOS']
     }
@@ -115,24 +106,18 @@ export default class ACamera {
       this.selfPosition.z = target.position.z
       this.targetPosition.z = target.position.z
       //
-      // if (target.name === 'outDoor') {
-      //   if (this.moveQueue.length) {
-      //     this.targetPosition.x +=
-      //       this.moveQueue[0] === 'leftStandPoint' ? 0.8 :
-      //       this.moveQueue[0] === 'rightStandPoint' ? -0.8 : 0
-      //     this.targetPosition.z -= 0.4
-      //   } else {
       this.targetPosition.z += 0.6
-      //   }
-      // }
-      // if (target.name === 'leftStandPoint') {
-      //   this.targetPosition.x += 0.6
-      // }
-      // if (target.name === 'rightStandPoint') {
-      //   this.targetPosition.x -= 0.6
-      // }
+      if (this.moveQueue.length) {
+        if (this.moveQueue[0] === 'checkpointRL1') {
+          this.targetPosition.x += 1.2
+          this.targetPosition.z -= 0.5
+        }
+        if (this.moveQueue[0] === 'checkpointRR1') {
+          this.targetPosition.x += -1.2
+          this.targetPosition.z -= 0.5
+        }
+      }
       const targetForLooking = this.navigation.determineLookatBaseOnCheckpoint(target.name)
-      // console.log(target, targetForLooking)
       if (targetForLooking) {
         const tPosition = new Vector3(0, 0, 0)
         targetForLooking.getWorldPosition(tPosition)
@@ -141,7 +126,6 @@ export default class ACamera {
         this.targetPosition.z = tPosition.z
       }
       if (!this.moveQueue.length) {
-        // console.log('save: ', target.name)
         this.navigation.saveCheckpoint(target.name)
       }
     }
@@ -159,7 +143,6 @@ export default class ACamera {
         const target = this.scene.getObjectByName(this.moveQueue.shift())
         this.lockTarget(target)
         if (this.moveQueue.length === 0) {
-          // console.log('end move: ', target)
           if (target) {
             this.navigation.saveCheckpoint(target.name)
           }
@@ -181,10 +164,10 @@ export default class ACamera {
       } else {
         forward.visible = true
       }
-      backward.position.z = this.camera.position.z - 6
-      forward.position.z = this.camera.position.z + 6
-      backward.material.opacity = (Math.cos(backward.timer += delta) + 1) * 0.5
-      forward.material.opacity = (Math.cos(forward.timer += delta) + 1) * 0.5
+      backward.position.z = this.camera.position.z - 10
+      forward.position.z = this.camera.position.z + 10
+      backward.material.opacity = (Math.cos(backward.timer += delta * 2) + 1) * 0.5
+      forward.material.opacity = (Math.cos(forward.timer += delta * 2) + 1) * 0.5
     }
   }
 }
