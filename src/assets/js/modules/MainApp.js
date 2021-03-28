@@ -70,6 +70,9 @@ export default class MainApp extends BaseModule {
         }]
       })
       this.activeMeshes = [aMesh01, aMesh02]
+      //
+      this.aCam.navigation.hideVisibleCheckpoints()
+      this.aCam.initFollowers()
     })
     // wall
     // - left
@@ -140,17 +143,24 @@ export default class MainApp extends BaseModule {
       if (intersects.length) {
         console.log(intersects)
         const door = intersects.find(i => i.object.name.includes('door'))
+        const pic = intersects.find(i => i.object.name.includes('pic'))
+        const button = intersects.find(i => i.object.name.includes('button'))
         if (door) {
-          if (!this.aCam.isInsideRoom) {
-            this.aCam.isInsideRoom = true
-            this.aCam.moveTo(door, this.scene)
-          } else {
-            this.aCam.isInsideRoom = false
-            this.aCam.moveTo({
-              object: {
-                name: 'outDoor'
-              }
-            }, this.scene)
+          this.aCam.moveTo(door, this.scene)
+          return
+        }
+        if (pic) {
+          this.aCam.moveTo(pic, this.scene)
+          return
+        }
+        if (button) {
+          if (button.object.name === 'buttonMoveForward') {
+            this.aCam.move('forward')
+            this.aCam.move('forward')
+          }
+          if (button.object.name === 'buttonMoveBackward') {
+            this.aCam.move('backward')
+            this.aCam.move('backward')
           }
         }
       }
