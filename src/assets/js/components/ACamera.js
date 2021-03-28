@@ -132,7 +132,7 @@ export default class ACamera {
       //   this.targetPosition.x -= 0.6
       // }
       const targetForLooking = this.navigation.determineLookatBaseOnCheckpoint(target.name)
-      console.log(target, targetForLooking)
+      // console.log(target, targetForLooking)
       if (targetForLooking) {
         const tPosition = new Vector3(0, 0, 0)
         targetForLooking.getWorldPosition(tPosition)
@@ -141,7 +141,7 @@ export default class ACamera {
         this.targetPosition.z = tPosition.z
       }
       if (!this.moveQueue.length) {
-        console.log('save: ', target.name)
+        // console.log('save: ', target.name)
         this.navigation.saveCheckpoint(target.name)
       }
     }
@@ -159,7 +159,7 @@ export default class ACamera {
         const target = this.scene.getObjectByName(this.moveQueue.shift())
         this.lockTarget(target)
         if (this.moveQueue.length === 0) {
-          console.log('end move: ', target)
+          // console.log('end move: ', target)
           if (target) {
             this.navigation.saveCheckpoint(target.name)
           }
