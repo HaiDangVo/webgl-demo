@@ -1,7 +1,7 @@
 import BaseModule from "./BaseModule"
 export default class PreloaderModule extends BaseModule {
   register() {
-    // console.log()
+    this.bar = this.el.querySelector('.percentage')
   }
 
   hide() {
@@ -9,5 +9,11 @@ export default class PreloaderModule extends BaseModule {
     setTimeout(() => {
       this.el.style.display = 'none'
     }, 1200)
+  }
+
+  progress(pct) {
+    if (this.bar) {
+      this.bar.style.transform = `scaleX(${pct})`
+    }
   }
 }

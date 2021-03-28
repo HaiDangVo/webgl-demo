@@ -1,6 +1,10 @@
 {% extends "./_templates/layout.twig" %}
 
 {% block page %}
+<div class="preloader" data-module="PreloaderModule">
+  <div class="progress-bar">
+    <div class="percentage"></div>
+  </div>
+</div>
 <div class="container-fluid" data-module="MainApp"></div>
-<div class="preloader" data-module="PreloaderModule"></div>
 {% endblock %}

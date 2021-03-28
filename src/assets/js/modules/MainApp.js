@@ -6,6 +6,7 @@ import {
   GridHelper,
   ObjectLoader,
   Scene,
+  sRGBEncoding,
   Vector2,
   WebGLRenderer
 } from "three"
@@ -28,6 +29,7 @@ export default class MainApp extends BaseModule {
       antialias: true
     })
     this.renderer.shadowMap.enabled = true
+    this.renderer.outputEncoding = sRGBEncoding
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.ticker = new Clock(false)
@@ -47,11 +49,12 @@ export default class MainApp extends BaseModule {
     window.app = this
 
     // light
-    this.scene.add(new AmbientLight(0x999999))
+    // this.scene.add(new AmbientLight(0x999999))
 
     // loader
+    const preloader = (factory.getModulesByName('PreloaderModule') || [])[0]
     this.loader = new ObjectLoader()
-    this.loader.load('assets/images/scene.json', object => {
+    this.loader.load('assets/images/scene-extended-texture.json', object => {
       this.scene.add(object)
       const aMesh01 = new AMesh({
         mesh: this.scene.getObjectByName('rotateObject 01'),
@@ -109,10 +112,12 @@ export default class MainApp extends BaseModule {
       })
 
       // all done
-      const preloader = (factory.getModulesByName('PreloaderModule') || [])[0]
       preloader && preloader.hide()
       this.theViewer.preStart()
       this.start()
+    }, e => {
+      console.log(e)
+      preloader.progress(e.loaded / e.total)
     })
     // reigster handler
     this.interactDetector.addEventListener('onTouchStart', intersects => {
