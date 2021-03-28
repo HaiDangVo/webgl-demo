@@ -116,7 +116,6 @@ export default class MainApp extends BaseModule {
       this.theViewer.preStart()
       this.start()
     }, e => {
-      console.log(e)
       preloader.progress(e.loaded / e.total)
     })
     // reigster handler
