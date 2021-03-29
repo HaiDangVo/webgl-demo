@@ -26,8 +26,16 @@ export default class InteractDetector {
       if (this.subs['onTouchStart']) {
         const intersects = this.getIntersects()
         this.subs['onTouchStart'].forEach(cb => cb && cb(intersects))
+        if (intersects.length) {
+          const button = intersects.find(i => i.object.name.includes('button'))
+          if (button) {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+          }
+        }
       }
-    })
+    }, { passive: false })
     this.renderer.domElement.addEventListener('pointerup', e => {
       const prevPos = {
         x: this.pointer.position.x,

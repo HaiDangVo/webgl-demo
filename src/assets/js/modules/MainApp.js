@@ -125,10 +125,8 @@ export default class MainApp extends BaseModule {
       if (button) {
         if (button.object.name === 'buttonMoveForward') {
           this.theViewer.move('forward')
-          this.theViewer.move('forward')
         }
         if (button.object.name === 'buttonMoveBackward') {
-          this.theViewer.move('backward')
           this.theViewer.move('backward')
         }
       }
