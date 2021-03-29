@@ -45,11 +45,15 @@ pathInstruction['checkpointRR2-2'] = pathInstruction.checkpointRR2
 pathInstruction['checkpointRR2-3'] = pathInstruction.checkpointRR2
 pathInstruction['checkpointRR2-4'] = pathInstruction.checkpointRR2
 
+//
+const centerPoints = ['checkpointRL1', 'checkpointRL2', 'checkpointRR1', 'checkpointRR2']
+
 export default class Navigation {
   constructor(options) {
     this.options = options
     this.scene = options.scene
     this.currentCheckpoint = null
+    this.actualCheckpointName = null
     this.isOutdoor = true
   }
 
@@ -69,9 +73,19 @@ export default class Navigation {
     return !this.currentCheckpoint || this.currentCheckpoint === pathInstruction.checkpointOS
   }
 
+  checkIfOnCenterPoint() {
+    return centerPoints.find(p => p === this.actualCheckpointName)
+  }
+
   saveCheckpoint(name) {
+    this.actualCheckpointName = name
     this.currentCheckpoint = pathInstruction[name]
     this.isOutdoor = this.currentCheckpoint === pathInstruction.checkpointOS
+  }
+
+  determineCenterPoint() {
+    const queryName = (this.actualCheckpointName || '').split('-')[0]
+    return centerPoints.find(p => p === queryName)
   }
 
   determineNextCheckpoint(object) {

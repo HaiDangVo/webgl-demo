@@ -36,8 +36,8 @@ export default class TheViewer {
     this.controls.dampingFactor = 0.06
     this.controls.enablePan = false
     this.controls.enableZoom = false
-    this.controls.minPolarAngle = Math.PI * 0.4 // for lower
-    this.controls.maxPolarAngle = Math.PI * 0.6 // for upper
+    this.controls.minPolarAngle = Math.PI * 0.45 // for lower
+    this.controls.maxPolarAngle = Math.PI * 0.55 // for upper
     this.controls.target = new Vector3(this.targetPosition.x, this.targetPosition.y, this.targetPosition.z)
     let callbackId = 0
     const timeout = 1000
@@ -91,6 +91,14 @@ export default class TheViewer {
     if (this.navigation.checkIfOutdoor()) {
       this.navigation.saveCheckpoint('checkpointOS')
       this.moveQueue = ['checkpointOS']
+    } else {
+      if (!this.navigation.checkIfOnCenterPoint()) {
+        const centerPoint = this.navigation.determineCenterPoint()
+        if (centerPoint && centerPoint.length) {
+          this.navigation.saveCheckpoint(centerPoint)
+          this.moveQueue = [centerPoint]
+        }
+      }
     }
     this.moveQueue.push(this.navigation.determineNextCheckpoint(object.object))
     //

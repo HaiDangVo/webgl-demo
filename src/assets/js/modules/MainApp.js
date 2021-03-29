@@ -119,15 +119,20 @@ export default class MainApp extends BaseModule {
       preloader.progress(e.loaded / e.total)
     })
     // reigster handler
-    this.interactDetector.addEventListener('onTouchStart', intersects => {
-      if (!intersects.length) return
-      const button = intersects.find(i => i.object.name.includes('button'))
-      if (button) {
-        if (button.object.name === 'buttonMoveForward') {
-          this.theViewer.move('forward')
-        }
-        if (button.object.name === 'buttonMoveBackward') {
-          this.theViewer.move('backward')
+    DeThrottler({
+      target: this.interactDetector,
+      event: 'onTouchStart',
+      skipLastCall: true,
+      callback: intersects => {
+        if (!intersects.length) return
+        const button = intersects.find(i => i.object.name.includes('button'))
+        if (button) {
+          if (button.object.name === 'buttonMoveForward') {
+            this.theViewer.move('forward')
+          }
+          if (button.object.name === 'buttonMoveBackward') {
+            this.theViewer.move('backward')
+          }
         }
       }
     })
